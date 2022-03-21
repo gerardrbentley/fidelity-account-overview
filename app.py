@@ -73,7 +73,7 @@ def filter_data(
 
 
 def main() -> None:
-    st.header("Fidelity Account Overview")
+    st.header("Fidelity Account Overview :moneybag: :dollar: :bar_chart:")
 
     with st.expander("How to Use This"):
         st.write(Path("README.md").read_text())
@@ -89,83 +89,92 @@ def main() -> None:
     else:
         st.success("Uploaded your file!")
 
-    if uploaded_data is not None:
-        df = pd.read_csv(uploaded_data)
-        with st.expander("Raw Dataframe"):
-            st.write(df)
+    df = pd.read_csv(uploaded_data)
+    with st.expander("Raw Dataframe"):
+        st.write(df)
 
-        df = clean_data(df)
-        with st.expander("Cleaned Data"):
-            st.write(df)
+    df = clean_data(df)
+    with st.expander("Cleaned Data"):
+        st.write(df)
 
-        accounts = list(df.account_name.unique())
-        account_selections = st.multiselect(
-            "Select Accounts to View", options=accounts, default=accounts
+    st.sidebar.subheader("Filter Displayed Accounts")
+
+    accounts = list(df.account_name.unique())
+    account_selections = st.sidebar.multiselect(
+        "Select Accounts to View", options=accounts, default=accounts
+    )
+    st.sidebar.subheader("Filter Displayed Tickers")
+
+    symbols = list(
+        df.loc[df.account_name.isin(account_selections), "symbol"].unique()
+    )
+    symbol_selections = st.sidebar.multiselect(
+        "Select Ticker Symbols to View", options=symbols, default=symbols
+    )
+
+    df = filter_data(df, account_selections, symbol_selections)
+    with st.expander("Filtered Data"):
+        st.write(df)
+
+    def draw_bar(y_val: str) -> None:
+        fig = px.bar(df, y=y_val, x="symbol", **COMMON_ARGS)
+        fig.update_layout(
+            barmode="stack", xaxis={"categoryorder": "total descending"}
         )
+        chart(fig)
 
-        symbols = list(
-            df.loc[df.account_name.isin(account_selections), "symbol"].unique()
-        )
-        symbol_selections = st.multiselect(
-            "Select Accounts to View", options=symbols, default=symbols
-        )
-
-        df = filter_data(df, account_selections, symbol_selections)
-        with st.expander("Filtered Data"):
-            st.write(df)
-
-        def draw_bar(y_val: str) -> None:
-            fig = px.bar(df, y=y_val, x="symbol", **COMMON_ARGS)
-            fig.update_layout(
-                barmode="stack", xaxis={"categoryorder": "total descending"}
-            )
-            chart(fig)
-
-        st.subheader("Value of Account(s)")
-        totals = df.groupby("account_name", as_index=False).sum()
-        for column, row in zip(st.columns(len(totals)), totals.itertuples()):
-            column.metric(
-                row.account_name,
-                f"${row.current_value:.2f}",
-                f"${row.total_gain_loss_dollar:.2f}",
-            )
+    account_plural = "s" if len(account_selections) > 1 else ""
+    st.subheader(f"Value of Account{account_plural}")
+    totals = df.groupby("account_name", as_index=False).sum()
+    if len(account_selections) > 1:
         st.metric(
             "Total of All Accounts",
             f"${totals.current_value.sum():.2f}",
             f"${totals.total_gain_loss_dollar.sum():.2f}",
         )
-
-        fig = px.bar(
-            totals,
-            y="account_name",
-            x="current_value",
-            color="account_name",
-            color_discrete_sequence=px.colors.sequential.Greens,
+    for column, row in zip(st.columns(len(totals)), totals.itertuples()):
+        column.metric(
+            row.account_name,
+            f"${row.current_value:.2f}",
+            f"${row.total_gain_loss_dollar:.2f}",
         )
-        fig.update_layout(barmode="stack", xaxis={"categoryorder": "total descending"})
-        chart(fig)
 
-        st.subheader("Value of each Symbol")
-        draw_bar("current_value")
+    fig = px.bar(
+        totals,
+        y="account_name",
+        x="current_value",
+        color="account_name",
+        color_discrete_sequence=px.colors.sequential.Greens,
+    )
+    fig.update_layout(barmode="stack", xaxis={"categoryorder": "total descending"})
+    chart(fig)
 
-        st.subheader("Value of each Symbol per Account")
-        fig = px.sunburst(
-            df, path=["account_name", "symbol"], values="current_value", **COMMON_ARGS
-        )
-        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-        chart(fig)
+    st.subheader("Value of each Symbol")
+    draw_bar("current_value")
 
-        st.subheader("Value of each Symbol")
-        fig = px.pie(df, values="current_value", names="symbol", **COMMON_ARGS)
-        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-        chart(fig)
+    st.subheader("Value of each Symbol per Account")
+    fig = px.sunburst(
+        df, path=["account_name", "symbol"], values="current_value", **COMMON_ARGS
+    )
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
 
-        st.subheader("Total Value gained each Symbol")
-        draw_bar("total_gain_loss_dollar")
-        st.subheader("Total Percent Value gained each Symbol")
-        draw_bar("total_gain_loss_percent")
+    st.subheader("Value of each Symbol")
+    fig = px.pie(df, values="current_value", names="symbol", **COMMON_ARGS)
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+    chart(fig)
+
+    st.subheader("Total Value gained each Symbol")
+    draw_bar("total_gain_loss_dollar")
+    st.subheader("Total Percent Value gained each Symbol")
+    draw_bar("total_gain_loss_percent")
 
 
 if __name__ == "__main__":
-    st.set_page_config(layout="wide")
+    st.set_page_config(
+        "Fidelity Account View by Gerard Bentley",
+        "📊",
+        initial_sidebar_state="expanded",
+        layout="wide",
+    )
     main()
