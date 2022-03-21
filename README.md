@@ -31,7 +31,7 @@ The idea is not specific to Fidelity, it just happens to be where I have account
 It would work with any csv with the needed columns.
 
 Built with :heart: from [Gar's Bar](https://tech.gerardbentley.com/).
-Powered by [Streamlit](https://streamlit.io), [pandas](https://pandas.pydata.org/docs/), and [plotly](https://plotly.com/python/).
+Powered by [Streamlit](https://streamlit.io), [pandas](https://pandas.pydata.org/docs/), [plotly](https://plotly.com/python/), and [streamlit-aggrid](https://github.com/PablocFonseca/streamlit-aggrid).
 
 ## Sample Data
 

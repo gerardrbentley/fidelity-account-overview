@@ -1,11 +1,11 @@
 ﻿Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value,Today's Gain/Loss Dollar,Today's Gain/Loss Percent,Total Gain/Loss Dollar,Total Gain/Loss Percent,Percent Of Account,Cost Basis,Cost Basis Per Share,Type
 Z1234567,INDIVIDUAL + TOD,ABC,ABC Stock,41.28,$441.41,+$4.24,$1428.42,+$111.14,+4.44%,+$48.41,+0.84%,11.91%,$1440.09,$418.14,Cash
-Z1234567,INDIVIDUAL + TOD,DEF,DEF Stock,48.208,$101.24,+$4.11,$1091.11,+$115.01,+4.14%,+$18.98,+1.19%,11.19%,$1111.14,$101.04,Cash
-Z1234567,INDIVIDUAL + TOD,GHI,GHI Stock,59.452,$50.98,+$1.11,$4101.19,+$81.02,+4.49%,+$482.11,+5.98%,10.51%,$4188.94,$51.41,Cash
+Z1234567,INDIVIDUAL + TOD,DEF,DEF Stock,48.208,$101.24,-$4.11,$1091.11,-$115.01,-4.14%,-$18.98,-1.19%,11.19%,$1111.14,$101.04,Cash
+Z1234567,INDIVIDUAL + TOD,GHI,GHI Stock,59.452,$50.98,+$0.00,$4101.19,+$0.00,+0.00%,+$21.12,+13.34%,10.51%,$4188.94,$51.41,Cash
 Z1234567,INDIVIDUAL + TOD,JKL,JKL Stock,10.194,$144.01,+$4.29,$1959.54,+$29.15,+4.15%,+$401.14,+8.94%,8.92%,$4191.12,$119.40,Cash
-12345678,ROTH IRA,ABC,ABC Stock,15.444,$441.41,+$4.24,$1185.12,+$92.48,+4.44%,+$54.21,+1.94%,42.12%,$1518.41,$441.42,Cash
+12345678,ROTH IRA,ABC,ABC Stock,15.444,$441.41,-$4.24,$1185.12,-$92.48,-4.44%,-$54.21,-1.94%,42.12%,$1518.41,$441.42,Cash
 12345678,ROTH IRA,WTF,WTF Stock,11.415,$112.12,+$5.00,$1208.01,+$81.14,+4.24%,+$904.41,+49.89%,44.41%,$4111.10,$154.54,Cash
-12345,401K COMPANY,FFXYZ,FID FREEDOM XYZ,99.195,$11.41,+$0.14,$1198.81,+$44.24,+4.11%,+$112.20,+8.11%,5.85%,$1482.91,$15.94,
+12345,401K COMPANY,FFXYZ,FID FREEDOM XYZ,99.195,$11.41,-$0.14,$1198.81,-$44.24,-4.11%,-$112.20,-8.11%,5.85%,$1482.91,$15.94,
 12345,401K COMPANY,FFPDQ,FID FREEDOM PDQ,81.854,$14.11,+$0.45,$1198.41,+$44.41,+4.14%,+$101.12,+2.05%,5.85%,$1424.51,$11.51,
 
 "The data and information in this spreadsheet is provided to you solely for your use and is not for distribution. The spreadsheet is provided for informational purposes only, and is not intended to provide advice, nor should it be construed as an offer to sell, a solicitation of an offer to buy or a recommendation for any security by Fidelity or any third party. Data and information shown is based on information known to Fidelity as of the date it was exported and is subject to change. It should not be used in place of your account statements or trade confirmations and is not intended for tax reporting purposes. For more information on the data included in this spreadsheet, including any limitations thereof, go to Fidelity.com."

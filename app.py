@@ -2,6 +2,9 @@ import functools
 from pathlib import Path
 
 import streamlit as st
+from st_aggrid import AgGrid
+from st_aggrid.shared import JsCode
+from st_aggrid.grid_options_builder import GridOptionsBuilder
 import pandas as pd
 import plotly.express as px
 
@@ -46,6 +49,11 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         df.columns[price_index : cost_basis_index + 1]
     ].transform(lambda s: s.str.replace("$", "").str.replace("%", "").astype(float))
 
+    quantity_index = df.columns.get_loc("quantity")
+    most_relevant_columns = df.columns[quantity_index : cost_basis_index + 1]
+    first_columns = df.columns[0:quantity_index]
+    last_columns = df.columns[cost_basis_index + 1 :]
+    df = df[[*most_relevant_columns, *first_columns, *last_columns]]
     return df
 
 
@@ -105,22 +113,56 @@ def main() -> None:
     )
     st.sidebar.subheader("Filter Displayed Tickers")
 
-    symbols = list(
-        df.loc[df.account_name.isin(account_selections), "symbol"].unique()
-    )
+    symbols = list(df.loc[df.account_name.isin(account_selections), "symbol"].unique())
     symbol_selections = st.sidebar.multiselect(
         "Select Ticker Symbols to View", options=symbols, default=symbols
     )
 
     df = filter_data(df, account_selections, symbol_selections)
-    with st.expander("Filtered Data"):
-        st.write(df)
+    st.subheader("Selected Account and Ticker Data")
+    cellsytle_jscode = JsCode(
+        """
+    function(params) {
+        if (params.value > 0) {
+            return {
+                'color': 'white',
+                'backgroundColor': 'forestgreen'
+            }
+        } else if (params.value < 0) {
+            return {
+                'color': 'white',
+                'backgroundColor': 'crimson'
+            }
+        } else {
+            return {
+                'color': 'white',
+                'backgroundColor': 'slategray'
+            }
+        }
+    };
+    """
+    )
+
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_columns(
+        (
+            "last_price_change",
+            "total_gain_loss_dollar",
+            "total_gain_loss_percent",
+            "today's_gain_loss_dollar",
+            "today's_gain_loss_percent",
+        ),
+        cellStyle=cellsytle_jscode,
+    )
+    gb.configure_pagination()
+    gb.configure_columns(("account_name", "symbol"), pinned=True)
+    gridOptions = gb.build()
+
+    AgGrid(df, gridOptions=gridOptions, allow_unsafe_jscode=True)
 
     def draw_bar(y_val: str) -> None:
         fig = px.bar(df, y=y_val, x="symbol", **COMMON_ARGS)
-        fig.update_layout(
-            barmode="stack", xaxis={"categoryorder": "total descending"}
-        )
+        fig.update_layout(barmode="stack", xaxis={"categoryorder": "total descending"})
         chart(fig)
 
     account_plural = "s" if len(account_selections) > 1 else ""
