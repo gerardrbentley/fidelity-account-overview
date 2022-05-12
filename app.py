@@ -172,13 +172,13 @@ def main() -> None:
         st.metric(
             "Total of All Accounts",
             f"${totals.current_value.sum():.2f}",
-            f"${totals.total_gain_loss_dollar.sum():.2f}",
+            f"{totals.total_gain_loss_dollar.sum():.2f}",
         )
     for column, row in zip(st.columns(len(totals)), totals.itertuples()):
         column.metric(
             row.account_name,
             f"${row.current_value:.2f}",
-            f"${row.total_gain_loss_dollar:.2f}",
+            f"{row.total_gain_loss_dollar:.2f}",
         )
 
     fig = px.bar(
