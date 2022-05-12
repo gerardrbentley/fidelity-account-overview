@@ -38,7 +38,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: cleaned dataframe with features above
     """
     df = df.copy()
-    df.columns = df.columns.str.lower().str.replace(" ", "_").str.replace("/", "_")
+    df.columns = df.columns.str.lower().str.replace(" ", "_", regex=False).str.replace("/", "_", regex=False)
 
     df.type = df.type.fillna("unknown")
     df = df.dropna()
@@ -47,7 +47,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     cost_basis_index = df.columns.get_loc("cost_basis_per_share")
     df[df.columns[price_index : cost_basis_index + 1]] = df[
         df.columns[price_index : cost_basis_index + 1]
-    ].transform(lambda s: s.str.replace("$", "").str.replace("%", "").astype(float))
+    ].transform(lambda s: s.str.replace("$", "", regex=False).str.replace("%", "", regex=False).astype(float))
 
     quantity_index = df.columns.get_loc("quantity")
     most_relevant_columns = df.columns[quantity_index : cost_basis_index + 1]
